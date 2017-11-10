@@ -7,5 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Mukul <mukul1904@gmail.com>",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "latest-tweets": "^1.0.3",
+    "winston": "^2.4.0",
+    "winston-papertrail": "^1.0.5"
+  }
 }

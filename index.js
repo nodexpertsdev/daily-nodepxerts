@@ -1,5 +1,7 @@
 'use strict';
 
+const latestTweets = require('latest-tweets')
+
 const helpers = require('./helpers');
 const messages = require('./messages');
 const alexaLogger = require('./logger');
@@ -48,20 +50,18 @@ function getLatestNewsByNodeXperts(intent, session, callback) {
     } else if (intent.name === 'AMAZON.StopIntent' || intent.name === 'AMAZON.CancelIntent') {
         return handleSessionEndRequest(callback);
     }
-    const query = getQueryByIntent(intent.name);
-    const cardTitle = intent.name;
-    alexaLogger.logInfo(`Intent ${cardTitle} received`);
+    const cardTitle = 'Get Latest news from NodeXperts';
     const repromptText = messages.repromptMessage;
     let sessionAttributes = {};
     const shouldEndSession = false;
-    dynamodb.getItem(query, (err, data) => {
-        let speechOutput;
+    let speechOutput;
+    latestTweets('nodexperts', (err, tweets) => {
         if (err) {
-            alexaLogger.logError(`Error in getting data from dynamodb: ${err}`);
+            alexaLogger.logError(`Error in getting data from nodexperts: ${err}`);
             speechOutput = 'We\'re sorry, there was some issue in getting response. Please try again.'
         } else {
-            speechOutput = data.Item.answer['S'];
-            alexaLogger.logInfo(`Recieved data from table for sessionId=${session.sessionId}: ${speechOutput}`);
+            speechOutput = tweets[0].content;
+            alexaLogger.logInfo(`Recieved data for sessionId=${session.sessionId}: ${speechOutput}`);
         }
         callback(sessionAttributes,
             helpers.buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
