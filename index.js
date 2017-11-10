@@ -36,6 +36,7 @@ function handleSessionHelpRequest(callback) {
     const speechOutput = messages.helpMessage;
     const repromptText = messages.repromptMessage;
     const shouldEndSession = false;
+    let sessionAttributes = {};
 
     callback(sessionAttributes,
         helpers.buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
